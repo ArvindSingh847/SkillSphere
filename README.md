@@ -5,7 +5,7 @@ SkillSphere is a student development platform aimed at helping students identify
 ## Current Features
 
 - FastAPI backend setup
-- Student endpoints
+- Student endpoints                     ## initial stage
 - Query parameter filtering
 - Path parameter handling
 
