@@ -1,4 +1,17 @@
 from fastapi import FastAPI
+from pydantic import BaseModel, Field
+all_students = {
+        "Arvind" : 98,
+        "Nikitha" : 100,
+        "Ganja" : 32,
+        "Purohit" : 21
+
+    }
+
+class Student(BaseModel):
+    name : str = Field(..., min_length = 2, max_length = 50)
+    marks : int = Field(..., ge = 1, le = 100)
+
 
 app = FastAPI()
 
@@ -8,14 +21,7 @@ def root():
 
 @app.get("/students")
 def get_student_info(passed : bool = None):
-    all_students = {
-        "Arvind" : 98,
-        "Nikitha" : 100,
-        "Ganja" : 32,
-        "Purohit" : 21
-
-    }
-
+   
     if passed is None:
         return {"Studetns": all_students}
     elif passed is True:
@@ -30,7 +36,16 @@ def get_app_info():
 
 
 @app.get("/students/{student_name}")
-async def read_item(student_name):
+def read_item(student_name : str):
     return {"student_name" : student_name}
+
+
+@app.post("/students")
+def post_data(student:Student):
+    all_students[student.name] = student.marks
+    return{
+        "Message" : f"Student {student.name} added",
+        "Current data " :  all_students
+    }
 
 
