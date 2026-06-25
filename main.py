@@ -1,5 +1,10 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
+from fastapi import HTTPException
+from fastapi import status
+
+
+
 all_students = {
         "Arvind" : 98,
         "Nikitha" : 100,
@@ -37,7 +42,13 @@ def get_app_info():
 
 @app.get("/students/{student_name}")
 def read_item(student_name : str):
-    return {"student_name" : student_name}
+    if student_name not in all_students:
+       raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
+                            detail = "student name not found")
+    else:
+        marks = all_students[student_name]
+        return {"student_name" : student_name,
+                "marks" : marks}
 
 
 @app.post("/students")
@@ -48,4 +59,8 @@ def post_data(student:Student):
         "Current data " :  all_students
     }
 
+
+@app.get("/marks")
+def get_marks(min_marks: int = 0):
+    return {"minimum": min_marks}
 
