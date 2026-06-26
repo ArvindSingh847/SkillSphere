@@ -17,6 +17,17 @@ class Student(BaseModel):
     name : str = Field(..., min_length = 2, max_length = 50)
     marks : int = Field(..., ge = 1, le = 100)
 
+class StudentCreate(BaseModel):
+    name : str= Field(..., min_length = 2, max_length = 50)
+    marks : int = Field(..., ge = 1, le = 100)
+    # email : str = Field(..., min_length = 4, max_length = 30)
+    # password : str = Field(..., min_length= 12, max_length= 8)
+
+class StudentResponse(BaseModel):
+    student_name : str= Field(..., min_length = 2, max_length = 50)
+    marks : int = Field(..., ge = 1, le = 100)
+    # email : str = Field(..., min_length = 4, max_length = 30)
+
 
 app = FastAPI()
 
@@ -40,7 +51,7 @@ def get_app_info():
     return {"Message" : "SkillSphere 1.0"}
 
 
-@app.get("/students/{student_name}")
+@app.get("/students/{student_name}", response_model = StudentResponse)
 def read_item(student_name : str):
     if student_name not in all_students:
        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
