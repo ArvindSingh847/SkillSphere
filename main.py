@@ -28,6 +28,9 @@ class StudentResponse(BaseModel):
     marks : int = Field(..., ge = 1, le = 100)
     # email : str = Field(..., min_length = 4, max_length = 30)
 
+class StudentUpdate(BaseModel):
+    marks : int = Field(..., ge = 1, le = 100)
+
 
 app = FastAPI()
 
@@ -68,6 +71,21 @@ def post_data(student:Student):
     return{
         "Message" : f"Student {student.name} added",
         "Current data " :  all_students
+    }
+
+@app.put("/students/{student_name}", response_model = StudentResponse)
+def update_students(student_name : str, update : StudentUpdate):
+    if student_name not in all_students:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "student not found"
+        )
+    
+    
+    all_students[student_name] = update.marks
+    return {
+        "student_name" : student_name,
+        "marks" : all_students[student_name]
     }
 
 
