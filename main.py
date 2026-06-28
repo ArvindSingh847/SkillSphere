@@ -93,3 +93,17 @@ def update_students(student_name : str, update : StudentUpdate):
 def get_marks(min_marks: int = 0):
     return {"minimum": min_marks}
 
+
+@app.delete("/students/{student_name}")
+def delete_student(student_name : str):
+    if student_name not in all_students:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "User does not exists"
+        )
+    del all_students[student_name]
+    return {
+        "message" : f"Deleted {student_name}'s account"
+    }
+
+
